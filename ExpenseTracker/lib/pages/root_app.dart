@@ -1,3 +1,5 @@
+import 'package:budget_tracker_ui/Util/Helper.dart';
+import 'package:budget_tracker_ui/json/UserData_JSON.dart';
 import 'package:budget_tracker_ui/pages/budget_page.dart';
 import 'package:budget_tracker_ui/pages/create_budge_page.dart';
 import 'package:budget_tracker_ui/pages/daily_page.dart';
@@ -10,6 +12,35 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 
 class RootApp extends StatefulWidget {
   var rootState;
+  	  String Email="";
+  String Name="";
+  String Dob="";
+  String id="";
+  void setNameEmailDob(String Email,
+      String Name,
+  String Dob){
+    this.Name=Name;
+    this.Dob=Dob;
+    this.Email=Email;
+    this.id=id;
+    userData.add({
+      "id":id,
+      "name":Name,
+      "email":Email,
+      "dob":Dob
+    });
+  }
+  void searchAndSetUser(String id){
+    for(int i=0;i<userData.length;i++){
+      if(userData[i]['email'].toString()==id){
+        this.Name=userData[i]['name'];
+        this.Dob=userData[i]['dob'];
+        this.Email=userData[i]['email'];
+        getToast("user found");
+        return ;
+      }
+    }
+  }
   void setRoot(var root){
     rootState=root;
   }
@@ -30,6 +61,7 @@ class _RootAppState extends State<RootApp> {
   _RootAppState(RootApp root){
     rootApp=root;
     rootApp.setRoot(this);
+    rootApp.searchAndSetUser(rootApp.Email);
     this.pages = [
     DailyPage(rootApp),
     StatsPage(rootApp),
