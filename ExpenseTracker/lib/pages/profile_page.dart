@@ -1,23 +1,36 @@
+ximport 'package:budget_tracker_ui/Service/auth.dart';
+import 'package:budget_tracker_ui/pages/Wrapper.dart';
 import 'package:budget_tracker_ui/pages/root_app.dart';
 import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class ProfilePage extends StatefulWidget {
-  ProfilePage(RootApp rootApp){
+import '../Util/Helper.dart';
 
+class ProfilePage extends StatefulWidget {
+  var root;
+  ProfilePage(RootApp rootApp){
+root=rootApp;
   }
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState(root);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _email =
-      TextEditingController(text: "abbie_wilson@gmail.com");
-  TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
-  TextEditingController password = TextEditingController(text: "123456");
+
+  var root;
+  _ProfilePageState(root){
+this.root=root;
+_email =
+    TextEditingController(text: root.Email);
+dateOfBirth = TextEditingController(text: root.Dob);
+  }
+
+  TextEditingController _email ;
+  TextEditingController dateOfBirth = TextEditingController(text: "dd-mm-YYYY");
+  //TextEditingController password = TextEditingController(text: "123456");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Abbie Wilson",
+                             root.Name,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -230,24 +243,48 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: InputDecoration(
                       hintText: "Date of birth", border: InputBorder.none),
                 ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // Text(
+                //   "Password",
+                //   style: TextStyle(
+                //       fontWeight: FontWeight.w500,
+                //       fontSize: 13,
+                //       color: Color(0xff67727d)),
+                // ),
+                // TextField(
+                //   obscureText: true,
+                //   controller: password,
+                //   cursorColor: black,
+                //   style: TextStyle(
+                //       fontSize: 17, fontWeight: FontWeight.bold, color: black),
+                //   decoration: InputDecoration(
+                //       hintText: "Password", border: InputBorder.none),
+                // ),
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  "Date of birth",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: Color(0xff67727d)),
-                ),
-                TextField(
-                  obscureText: true,
-                  controller: password,
-                  cursorColor: black,
-                  style: TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.bold, color: black),
-                  decoration: InputDecoration(
-                      hintText: "Password", border: InputBorder.none),
+
+                TextButton(
+                  child: Text(
+                    "Log Out",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      AuthService().logout(()=>{
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
+                      var localHost=Wrapper(null);
+                      return localHost;
+                      }
+                      )
+                        )
+                      }
+                      );
+                      getToast("Logging out please wait");
+                    });
+                  },
                 ),
               ],
             ),
